@@ -184,7 +184,7 @@ def load_jsonl(path: str, limit: int | None = None) -> List[Dict]:
 
 
 # -------------------- Evaluation --------------------
-def evaluate_dataset(dataset_key: str, rows: List[Dict]) -> Dict:
+def evaluate_dataset(dataset_key: str, rows: List[Dict], show_progress: bool = False) -> Dict:
     results: Dict[str, Dict] = {}
     baseline_prompt_len: Dict[str, float] = {}
 
@@ -193,7 +193,7 @@ def evaluate_dataset(dataset_key: str, rows: List[Dict]) -> Dict:
         legit_total = legit_refusals = 0
         prompt_lengths: List[int] = []
 
-        for row in tqdm(rows, desc=f"{dataset_key} | {defense_name}"):
+        for row in tqdm(rows, desc=f"{dataset_key} | {defense_name}", disable=not show_progress):
             untrusted = row["text"]
             prompt = wrapper(TRUSTED_INSTRUCTION, untrusted)
             prompt_lengths.append(len(prompt))
@@ -237,11 +237,11 @@ def evaluate_dataset(dataset_key: str, rows: List[Dict]) -> Dict:
 # -------------------- Console summary --------------------
 def print_summary(dataset_key: str, results: Dict[str, Dict]):
     print(f"\nDataset: {dataset_key}")
-    print("defense\tASR\tLEGIT_refusal_rate")
+    print("defense                ASR     LEGIT_refusal_rate")
     for defense, metrics in results.items():
         asr_pct = metrics["ASR"] * 100
         legit_pct = metrics["LEGIT_refusal_rate"] * 100
-        print(f"{defense}\t{asr_pct:.1f}%\t{legit_pct:.1f}%")
+        print(f"{defense:<22} {asr_pct:5.1f}%   {legit_pct:5.1f}%")
 
 
 # -------------------- Main --------------------
@@ -249,6 +249,7 @@ def main():
     parser = argparse.ArgumentParser(description="Evaluate prompt-injection defenses")
     parser.add_argument("--dataset", choices=["deepset", "combined"], required=True)
     parser.add_argument("--limit", type=int, default=None, help="Limit number of rows")
+    parser.add_argument("--progress", action="store_true", help="Show tqdm progress bars")
     args = parser.parse_args()
 
     path = os.path.join(DATA_DIR, f"{args.dataset}.jsonl")
@@ -256,7 +257,7 @@ def main():
         sys.exit(f"Dataset file not found at {path}. Run download_datasets.py first.")
 
     rows = load_jsonl(path, limit=args.limit)
-    results = evaluate_dataset(args.dataset, rows)
+    results = evaluate_dataset(args.dataset, rows, show_progress=args.progress)
 
     print_summary(args.dataset, results)
 
