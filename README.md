@@ -1,6 +1,6 @@
 # Prompt Injection Defense Mini-Evaluation
 
-Minimal, dependency-light suite to reproduce a small part of the paper's prompt-injection evaluation. It downloads two public Hugging Face datasets, wraps their prompts with a few baseline defenses, and measures attack success rate (ASR) and false-positive/refusal rate.
+Minimal, dependency-light suite to reproduce a small part of the paper's prompt-injection evaluation. It downloads two public Hugging Face datasets, wraps their prompts with a few baseline defenses, and measures attack success rate (ASR) and false-positive/refusal rate. Defenses live in `scripts/defenses.py`; the evaluator is `scripts/eval_asr.py`.
 
 ## Datasets
 - `deepset/prompt-injections` (all 662 samples)
@@ -18,6 +18,11 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Tests (stub mode, fast):
+```bash
+python -m pytest -q
+```
+
 ## Download datasets
 ```bash
 python scripts/download_datasets.py
@@ -29,15 +34,17 @@ This writes normalized JSONL files to `data/deepset.jsonl` and `data/combined.js
 python scripts/eval_asr.py --dataset deepset --limit 662
 python scripts/eval_asr.py --dataset combined --limit 10000
 # add --progress if you want tqdm bars
+# set ATTACKER_STUB=1 to simulate a model that follows injected commands for offline ASR signal
+# set OPENAI_API_KEY to call OpenAI models; otherwise a deterministic stub is used
 ```
 
 If `OPENAI_API_KEY` is set (and optionally `OPENAI_MODEL`, default `gpt-4o-mini`), the script will call the OpenAI Chat Completions API. Otherwise it uses a deterministic stub so the suite runs offline and still produces `results/results.json`.
 
-## Defenses implemented
+## Defenses implemented (scripts/defenses.py)
 - `no_defense`
 - `xml_delimiters` (wrap untrusted text in `<untrusted>` tags)
 - `prompt_hardening` (defensive instruction + delimiters)
-- `freeze_dry_standalone` (placeholder `protect()` you can replace with the paper's freeze-dry logic)
+- `freeze_dry_standalone` (randomized markers + integrity framing; freeze-dry style wrapper)
 
 ## Outputs
 - Console summary with ASR and benign refusal rate per defense (see “What the metrics mean” above).

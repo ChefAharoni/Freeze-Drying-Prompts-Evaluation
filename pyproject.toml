@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+addopts = "-q"
+markers = [
+  "stub: tests that run with deterministic stub backend",
+  "live: tests that call real LLM APIs (slow, flaky)",
+  "requires_data: needs downloaded datasets",
+]
