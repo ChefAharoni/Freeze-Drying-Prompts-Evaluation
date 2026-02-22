@@ -11,7 +11,7 @@ spec.loader.exec_module(eval_asr)  # type: ignore
 @pytest.mark.stub
 @pytest.mark.requires_data
 def test_baseline_ordering(deepset_rows):
-    results = eval_asr.evaluate_dataset("deepset", deepset_rows[:200])
+    results = eval_asr.evaluate_dataset("deepset", deepset_rows[:200], provider="stub")
     asr = {k: v["ASR"] for k, v in results.items()}
     assert asr["no_defense"] >= asr["prompt_hardening"]
     assert asr["no_defense"] >= asr["freeze_dry_standalone"]
