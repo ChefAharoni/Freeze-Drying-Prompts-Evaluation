@@ -11,6 +11,11 @@ import time
 import urllib.request
 from typing import Dict, Iterable, List, Tuple
 
+# Ensure project root is on sys.path when run directly (python scripts/eval_asr.py).
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
 from tqdm import tqdm
 
 from scripts.defenses import DEFENSES, freeze_dry_standalone  # re-export for tests
