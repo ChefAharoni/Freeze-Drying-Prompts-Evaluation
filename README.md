@@ -49,7 +49,7 @@ If `OPENAI_API_KEY` is set (and optionally `OPENAI_MODEL`, default `gpt-4o-mini`
 - `dual_llm_extract` (dual-LLM extraction/summarization pattern in one prompt)
 - `freeze_dry_standalone` (randomized markers + integrity framing; freeze-dry style wrapper)
 - `layered_guardrail` (routes suspicious inputs to freeze-dry, others to prompt hardening)
-- `camel_dual_llm` (CaMeL-style quarantine + privileged flow; two-stage handled in `eval_asr.py`)
+- CaMeL (full pipeline not bundled; integrate via upstream repo if desired)
 
 ## Outputs
 - Console summary with ASR and benign refusal rate per defense (see “What the metrics mean” above).
