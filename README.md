@@ -1,6 +1,6 @@
 # Prompt Injection Defense Mini-Evaluation
 
-Minimal, dependency-light suite to reproduce a small part of the paper's prompt-injection evaluation. It downloads two public Hugging Face datasets, wraps their prompts with a few baseline defenses, and measures attack success rate (ASR) and false-positive/refusal rate. Defenses live in `scripts/defenses.py`; the evaluator is `scripts/eval_asr.py`.
+Minimal, dependency-light suite to reproduce a small part of the paper's prompt-injection evaluation. It downloads two public Hugging Face datasets, wraps their prompts with a few baseline defenses, and measures attack success rate (ASR), false-positive/refusal rate, and prompt overhead (chars + tokens). Defenses live in `scripts/defenses.py`; the evaluator is `scripts/eval_asr.py`.
 
 ## Datasets
 - `deepset/prompt-injections` (all 662 samples)
@@ -36,6 +36,7 @@ python scripts/eval_asr.py --dataset combined --limit 10000
 # add --progress if you want tqdm bars
 # set ATTACKER_STUB=1 to simulate a model that follows injected commands for offline ASR signal
 # set OPENAI_API_KEY to call OpenAI models; otherwise a deterministic stub is used
+# optional: CAMEL_Q_MODEL / CAMEL_P_MODEL to override models for the dual-LLM CaMeL-style defense
 ```
 
 If `OPENAI_API_KEY` is set (and optionally `OPENAI_MODEL`, default `gpt-4o-mini`), the script will call the OpenAI Chat Completions API. Otherwise it uses a deterministic stub so the suite runs offline and still produces `results/results.json`.
@@ -45,6 +46,7 @@ If `OPENAI_API_KEY` is set (and optionally `OPENAI_MODEL`, default `gpt-4o-mini`
 - `xml_delimiters` (wrap untrusted text in `<untrusted>` tags)
 - `prompt_hardening` (defensive instruction + delimiters)
 - `freeze_dry_standalone` (randomized markers + integrity framing; freeze-dry style wrapper)
+- `camel_dual_llm` (dual-LLM CaMeL-style; classification + sanitized summarization handled in `eval_asr.py`)
 
 ## Outputs
 - Console summary with ASR and benign refusal rate per defense (see “What the metrics mean” above).
