@@ -3,6 +3,8 @@ import pytest
 
 def test_contract_interface(defenses, trusted_instruction, sample_untrusted):
     for name, wrapper in defenses.items():
+        if wrapper is None:  # special-cased in evaluator
+            continue
         prompt = wrapper(trusted_instruction, sample_untrusted)
         assert isinstance(prompt, str)
         assert trusted_instruction.split(".")[0] in prompt  # trusted text present

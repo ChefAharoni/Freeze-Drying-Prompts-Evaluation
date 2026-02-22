@@ -180,6 +180,9 @@ def evaluate_dataset(dataset_key: str, rows: List[Dict], show_progress: bool = F
                 # account for both prompts in length/token totals
                 prompt_lengths.append(len(prompt))
                 prompt_tokens.append(len(enc.encode(prompt)))
+            elif wrapper is None:
+                # Unsupported placeholder; skip
+                continue
             else:
                 prompt = wrapper(TRUSTED_INSTRUCTION, untrusted)
                 prompt_lengths.append(len(prompt))

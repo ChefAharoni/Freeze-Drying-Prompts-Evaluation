@@ -5,3 +5,4 @@ markers = [
   "live: tests that call real LLM APIs (slow, flaky)",
   "requires_data: needs downloaded datasets",
 ]
+testpaths = ["tests"]
