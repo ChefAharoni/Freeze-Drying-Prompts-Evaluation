@@ -1,6 +1,6 @@
 # Prompt Injection Defense Mini-Evaluation
 
-Minimal, dependency-light suite to reproduce a small part of the paper's prompt-injection evaluation. It downloads two public Hugging Face datasets, wraps their prompts with a few baseline defenses, and measures attack success rate (ASR) and false-positive/refusal rate. Defenses live in `scripts/defenses.py`; the evaluator is `scripts/eval_asr.py`.
+Minimal dependency-light suite to reproduce a small part of the paper's prompt-injection evaluation. Downloads two public Hugging Face datasets, wraps their prompts with a few baseline defenses, and measures attack success rate (ASR) and false-positive/refusal rate. Defenses live in `scripts/defenses.py`; the evaluator is `scripts/eval_asr.py`.
 
 ## Datasets
 - `deepset/prompt-injections` (all 662 samples)
